@@ -22,27 +22,35 @@ export async function POST(req: NextRequest) {
 
   const content = body.content;
 
-  // Try a few times to avoid code collisions.
-  for (let i = 0; i < 5; i++) {
-    const code = randomCode(6);
+  try {
+    // Try a few times to avoid code collisions.
+    for (let i = 0; i < 5; i++) {
+      const code = randomCode(6);
 
-    // If the code already exists, try another one.
-    const existing = await getTextByCode(code);
-    if (existing) continue;
+      // If the code already exists, try another one.
+      const existing = await getTextByCode(code);
+      if (existing) continue;
 
-    const saved = await saveTextWithCode(code, content);
-    if (!saved) {
-      continue;
+      const saved = await saveTextWithCode(code, content);
+      if (!saved) {
+        continue;
+      }
+
+      const url = new URL(`/text/${encodeURIComponent(code)}`, req.nextUrl);
+
+      return NextResponse.json(
+        {
+          code: saved.code,
+          url: url.toString(),
+        },
+        { status: 201 },
+      );
     }
-
-    const url = new URL(`/text/${encodeURIComponent(code)}`, req.nextUrl);
-
+  } catch (err) {
+    console.error("API error:", err);
     return NextResponse.json(
-      {
-        code: saved.code,
-        url: url.toString(),
-      },
-      { status: 201 },
+      { error: "Database connection failed. Please check environment variables." },
+      { status: 500 },
     );
   }
 
@@ -51,4 +59,3 @@ export async function POST(req: NextRequest) {
     { status: 500 },
   );
 }
-

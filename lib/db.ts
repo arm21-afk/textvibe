@@ -5,14 +5,16 @@ const globalForPool = globalThis as unknown as {
 };
 
 function getPool(): Pool {
-  const url = process.env.DATABASE_URL;
+  const url = process.env.POSTGRES_URL || process.env.DATABASE_URL;
   if (!url) {
-    throw new Error(
-      "DATABASE_URL is not set. Add it to a .env file in the project root (see .env.example)."
-    );
+    throw new Error("Neither POSTGRES_URL nor DATABASE_URL is set.");
   }
+
   if (!globalForPool.pgPool) {
-    globalForPool.pgPool = new Pool({ connectionString: url });
+    globalForPool.pgPool = new Pool({
+      connectionString: url,
+      ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+    });
   }
   return globalForPool.pgPool;
 }
@@ -40,9 +42,9 @@ export async function saveTextWithCode(code: string, content: string) {
 
   return result.rows[0] as
     | {
-        code: string;
-        content: string | null;
-        updated_at: Date;
-      }
+      code: string;
+      content: string | null;
+      updated_at: Date;
+    }
     | undefined;
 }

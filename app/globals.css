@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+:root {
+  --background: #030712;
+  --foreground: #f8fafc;
+  --accent: #22d3ee;
+  --accent-dim: #0891b2;
+  --glow: rgba(34, 211, 238, 0.15);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Subtle gradient mesh background */
+.bg-mesh {
+  background-color: #030712;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(34, 211, 238, 0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 50%, rgba(34, 211, 238, 0.06), transparent),
+    radial-gradient(ellipse 50% 30% at 0% 80%, rgba(34, 211, 238, 0.05), transparent);
+}
+
+/* Glass card */
+.glass {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+}
+
+/* Soft glow on focus / hover */
+.glow-ring {
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.2);
+}
+.glow-ring:focus-within,
+.glow-ring:focus {
+  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.4), 0 0 24px var(--glow);
+}
+
+/* Subtle entrance */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  animation: fade-up 0.5s ease-out forwards;
+}
+.animate-fade-up-1 { animation-delay: 0.05s; }
+.animate-fade-up-2 { animation-delay: 0.1s; }
+.animate-fade-up-3 { animation-delay: 0.15s; }
+.animate-fade-up-4 { animation-delay: 0.2s; }
+.animate-fade-up-5 { animation-delay: 0.25s; }
+
+/* Initial state for animation */
+.animate-fade-up,
+.animate-fade-up-1,
+.animate-fade-up-2,
+.animate-fade-up-3,
+.animate-fade-up-4,
+.animate-fade-up-5 {
+  opacity: 0;
+}
